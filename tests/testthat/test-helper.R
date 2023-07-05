@@ -45,7 +45,7 @@ test_that("can guess orderly version", {
   withr::local_options(orderly.version = NULL)
   expect_equal(guess_orderly_version(NULL), 2)
 
-  expect_equal(guess_orderly_version(1), 2)
+  expect_equal(guess_orderly_version(1), 1)
   expect_equal(guess_orderly_version(2), 2)
 
   withr::with_options(list(orderly.version = 1),
@@ -122,3 +122,81 @@ test_that("can set up orderly2 as orderly", {
 })
 
 
+test_that("sitrep returns useful information", {
+  deactivate()
+  ans <- sitrep()
+  expect_equal(ans$orderly,
+               list(version = NULL,
+                    is_installed = FALSE,
+                    is_loaded = FALSE,
+                    is_attached = FALSE))
+  expect_equal(ans$orderly1,
+               list(version = packageVersion("orderly1"),
+                    is_installed = TRUE,
+                    is_loaded = TRUE,
+                    is_attached = FALSE))
+  expect_equal(ans$orderly2,
+               list(version = packageVersion("orderly2"),
+                    is_installed = TRUE,
+                    is_loaded = TRUE,
+                    is_attached = FALSE))
+  expect_equal(ans$current, list(version = NULL, name = NULL))
+})
+
+
+test_that("sitrep returns useful information after helper", {
+  deactivate()
+  ans1 <- sitrep()
+  create_orderly_ns(2, FALSE)
+  ans2 <- sitrep()
+  expect_equal(ans2[names(ans2) != "current"], ans1[names(ans1) != "current"])
+  expect_equal(ans2$current, list(version = 2, name = "orderly2"))
+})
+
+
+test_that("sitrep check throws when expected", {
+  expect_silent(
+    check_sitrep(
+      list(orderly = list(is_installed = FALSE),
+           orderly1 = list(is_attached = FALSE),
+           orderly2 = list(is_attached = FALSE))))
+  expect_silent(
+    check_sitrep(
+      list(orderly = list(is_installed = FALSE),
+           orderly1 = list(is_attached = TRUE),
+           orderly2 = list(is_attached = FALSE))))
+  expect_silent(
+    check_sitrep(
+      list(orderly = list(is_installed = FALSE),
+           orderly1 = list(is_attached = FALSE),
+           orderly2 = list(is_attached = TRUE))))
+  expect_error(
+    check_sitrep(
+      list(orderly = list(is_installed = TRUE),
+           orderly1 = list(is_attached = FALSE),
+           orderly2 = list(is_attached = FALSE))),
+    "You have 'orderly' installed; please uninstall it")
+  expect_error(
+    check_sitrep(
+      list(orderly = list(is_installed = FALSE),
+           orderly1 = list(is_attached = TRUE),
+           orderly2 = list(is_attached = TRUE))),
+    "You have 'orderly1' and 'orderly2' attached; please restart")
+})
+
+
+test_that("use works with given version", {
+  deactivate()
+  use(1, FALSE)
+  expect_equal(current$version, 1)
+})
+
+
+test_that("activate works with found version", {
+  deactivate()
+  tmp <- withr::local_tempdir()
+  writeLines("minimum_orderly_version: 1.7.0",
+             file.path(file.path(tmp, "orderly_config.yml")))
+  withr::with_dir(tmp, activate())
+  expect_equal(current$version, 1)
+})

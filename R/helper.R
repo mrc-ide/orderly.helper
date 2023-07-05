@@ -27,7 +27,58 @@ activate <- function(verbose = NULL) {
 ##' @return Nothing, called for side effects only.
 use <- function(version = NULL, verbose = NULL) {
   version <- guess_orderly_version(version)
-  create_orderly_ns(version, verbose = NULL)
+  create_orderly_ns(version, verbose)
+}
+
+
+##' Deactivate any orderly helper
+##'
+##' @title Deactivate orderly helper
+##' @return Nothing, called for its side effect
+##' @export
+deactivate <- function() {
+  tryCatch(pkgload::unload("orderly"), error = function(e) NULL)
+  current$name <- NULL
+  current$version <- NULL
+  invisible()
+}
+
+
+##' Return information about the state of orderly1, orderly2 and the helper
+##'
+##' @title Return information about packages
+##' @return A list
+##' @export
+sitrep <- function() {
+  loaded <- loadedNamespaces()
+  attached <- sub("^package:", "", search())
+
+  f <- function(p) {
+    version <- tryCatch(utils::packageVersion(p), error = function(e) NULL)
+    list(version = version,
+         is_installed = !is.null(version),
+         is_loaded = p %in% loaded,
+         is_attached = p %in% attached)
+  }
+
+  pkg <- c("orderly", "orderly1", "orderly2")
+  ret <- lapply(pkg, f)
+  names(ret) <- pkg
+
+  if (ret$orderly$is_installed) {
+    is_installed <- any(
+      file.exists(file.path(.libPaths(), "orderly", "DESCRIPTION")))
+    if (!is_installed) {
+      ret$orderly <- list(version = NULL,
+                          is_installed = FALSE,
+                          is_loaded = FALSE,
+                          is_attached = FALSE)
+    }
+  }
+
+  ret$current <- list(version = current$version, name = current$name)
+
+  ret
 }
 
 
@@ -35,9 +86,10 @@ use <- function(version = NULL, verbose = NULL) {
 current <- new.env(parent = emptyenv())
 
 create_orderly_ns <- function(version, verbose) {
+  check_sitrep()
   name <- sprintf("orderly%d", version)
   verbose <- orderly_helper_verbose(verbose)
-  if (identical(name, current$name)) {
+  if (identical(version, current$version)) {
     if (verbose) {
       message(sprintf("Already using %s", orderly_version_str(version)))
     }
@@ -73,32 +125,13 @@ create_orderly_ns <- function(version, verbose) {
   ## Also don't support ':::' access; that's reasonable though.
 
   current$name <- name
+  current$version <- version
 
   invisible()
 }
 
 
-sitrep <- function() {
-  loaded <- loadedNamespaces()
-  attached <- sub("^package:", "", search())
-
-  f <- function(p) {
-    version <- tryCatch(utils::packageVersion(p), error = function(e) NULL)
-    list(name = p,
-         version = version,
-         is_installed = !is.null(version),
-         is_loaded = p %in% loaded,
-         is_attached = p %in% attached)
-  }
-
-  pkg <- c("orderly", "orderly1", "orderly2")
-  ret <- lapply(pkg, f)
-  names(ret) <- pkg
-  ret
-}
-
-
-check <- function(info = sitrep()) {
+check_sitrep <- function(info = sitrep()) {
   if (info$orderly$is_installed) {
     stop(paste("You have 'orderly' installed; please uninstall it first and",
                "install 'orderly1' and/or 'orderly2' instead"))
@@ -143,7 +176,7 @@ detect_orderly_version <- function(path) {
 
 guess_orderly_version <- function(version) {
   if (!is.null(version)) {
-    version <- validate_orderly_version(version, "argument 'version'", FALSE)
+    return(validate_orderly_version(version, "argument 'version'", FALSE))
   }
   
   version <- getOption("orderly.version", NULL)
