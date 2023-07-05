@@ -22,6 +22,26 @@ orderly.helper::activate()
 
 which will configure everything for you.
 
+Alternatively, run
+
+```r
+orderly.helper::use()
+```
+
+which will set up orderly based on your personal preferences.
+
+We recommend adding to your `.Rprofile`:
+
+```{r}
+options(orderly.version = 2, orderly.helper.verbose = TRUE)
+if (!require("orderly.helper", quietly = TRUE)) {
+  tryCatch(orderly.helper::activate(), 
+           error = function(e) orderly.helper::use())
+}
+```
+
+With the two options configured as you prefer.
+
 ## Installation
 
 To install `orderly.helper`:
