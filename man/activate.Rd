@@ -11,7 +11,7 @@ activate(verbose = NULL)
 the the value of the option \code{orderly.helper.verbose}}
 }
 \value{
-Nothing.
+Nothing, called for side effects only.
 }
 \description{
 Activate orderly for the current repository.  Run this from
@@ -19,7 +19,4 @@ anywhere within an orderly archive (i.e., a path containing
 orderly_config.yml; or where one of its parent directories do). We
 check what the required orderly minimum version is and set up the
 orderly namespace for the appropriate version.
-}
-\author{
-Richard Fitzjohn
 }

@@ -9,8 +9,8 @@
 ##' @param verbose Be verbose about what we are doing. If `NULL` uses
 ##'   the the value of the option `orderly.helper.verbose`
 ##'
-##' @return Nothing.
-##' @author Richard Fitzjohn
+##' @return Nothing, called for side effects only.
+##' @export
 activate <- function(verbose = NULL) {
   version <- detect_orderly_version(getwd())
   create_orderly_ns(version, verbose)
