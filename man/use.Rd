@@ -9,6 +9,9 @@ use(version = NULL, verbose = NULL)
 \arguments{
 \item{version}{Either \code{NULL} (in which case we use global
 preferences) or a number \code{1} or \code{2}.}
+
+\item{verbose}{Be verbose about what we are doing. If \code{NULL} uses
+the the value of the option \code{orderly.helper.verbose}}
 }
 \value{
 Nothing, called for side effects only.

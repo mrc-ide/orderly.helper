@@ -5,6 +5,10 @@
 ##' orderly namespace for the appropriate version.
 ##'
 ##' @title Activate orderly for current reposotory
+##'
+##' @param verbose Be verbose about what we are doing. If `NULL` uses
+##'   the the value of the option `orderly.helper.verbose`
+##'
 ##' @return Nothing.
 ##' @author Richard Fitzjohn
 activate <- function(verbose = NULL) {
@@ -22,6 +26,8 @@ activate <- function(verbose = NULL) {
 ##'
 ##' @param version Either `NULL` (in which case we use global
 ##'   preferences) or a number `1` or `2`.
+##'
+##' @inheritParams activate
 ##'
 ##' @export
 ##' @return Nothing, called for side effects only.
