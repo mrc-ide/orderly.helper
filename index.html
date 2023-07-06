@@ -67,11 +67,30 @@
 </h1></div>
 <!-- badges: start -->
 
+<p>This package exists to smooth over the difference between <a href="https://vaccineimpact.org/orderly" class="external-link"><code>orderly1</code></a> and <a href="https://mrc-ide.github.io/orderly2" class="external-link"><code>orderly2</code></a> while we manage the migration between the two packages. It will allow you to refer to either (but at the same time only <em>one</em>) of the packages by its namespace, so that</p>
+<pre><code><span><span class="fu">orderly</span><span class="fu">::</span><span class="fu">orderly_run</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span></code></pre>
+<p>will run <code>orderly_run</code> in one of the packages.</p>
+<p>Within an orderly repo, you can then run:</p>
+<pre><code><span><span class="fu">orderly.helper</span><span class="fu">::</span><span class="fu"><a href="reference/activate.html">activate</a></span><span class="op">(</span><span class="op">)</span></span></code></pre>
+<p>which will configure everything for you.</p>
+<p>Alternatively, run</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">orderly.helper</span><span class="fu">::</span><span class="fu"><a href="reference/use.html">use</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>which will set up orderly based on your personal preferences.</p>
+<p>If you don’t want to think about any of this, you can call</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">orderly.helper</span><span class="fu">::</span><span class="fu"><a href="reference/auto.html">auto</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>We recommend adding to your <code>.Rprofile</code>:</p>
+<pre class="{r}"><code><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>orderly.version <span class="op">=</span> <span class="fl">2</span>, orderly.helper.verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://github.com/mrc-ide/orderly.helper" class="external-link">"orderly.helper"</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu">orderly.helper</span><span class="fu">::</span><span class="fu"><a href="reference/auto.html">auto</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre>
+<p>With the two options configured as you prefer.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>To install <code>orderly.helper</code>:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"mrc-ide/orderly.helper"</span>, upgrade <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">

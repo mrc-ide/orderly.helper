@@ -13,6 +13,21 @@
     <loc>/index.html</loc>
   </url>
   <url>
+    <loc>/reference/activate.html</loc>
+  </url>
+  <url>
+    <loc>/reference/auto.html</loc>
+  </url>
+  <url>
+    <loc>/reference/deactivate.html</loc>
+  </url>
+  <url>
     <loc>/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/sitrep.html</loc>
+  </url>
+  <url>
+    <loc>/reference/use.html</loc>
   </url>
 </urlset>
