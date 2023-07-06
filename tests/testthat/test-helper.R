@@ -197,6 +197,6 @@ test_that("activate works with found version", {
   tmp <- withr::local_tempdir()
   writeLines("minimum_orderly_version: 1.7.0",
              file.path(file.path(tmp, "orderly_config.yml")))
-  withr::with_dir(tmp, activate())
+  withr::with_dir(tmp, activate(FALSE))
   expect_equal(current$version, 1)
 })

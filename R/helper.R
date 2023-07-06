@@ -161,9 +161,6 @@ orderly_helper_verbose <- function(verbose) {
 
 detect_orderly_version <- function(path) {
   root <- find_orderly_root(path)
-  if (is.null(root)) {
-    stop(sprintf("Did not find orderly root above '%s'", path))
-  }
   d <- yaml::yaml.load_file(file.path(root, "orderly_config.yml"))
   version_str <- d$minimum_orderly_version
   if (is.null(version_str)) {
@@ -216,4 +213,14 @@ orderly_version_str <- function(major) {
   name <- sprintf("orderly%d", major)
   version <- tryCatch(utils::packageVersion(name), error = function(e) "???")
   sprintf("orderly %d (%s)", major, as.character(version))
+}
+
+
+find_orderly_root <- function(start) {
+  tryCatch(
+    rprojroot::find_root(rprojroot::has_file("orderly_config.yml"),
+                         path = start),
+    error = function(e) {
+      stop(sprintf("Did not find orderly root above '%s'", start))
+    })
 }

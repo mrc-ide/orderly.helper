@@ -13,6 +13,7 @@ RoxygenNote: 7.1.1
 URL: https://github.com/mrc-ide/orderly.helper
 BugReports: https://github.com/mrc-ide/orderly.helper/issues
 Imports:
+    rprojroot,
     pkgload,
     yaml
 Suggests:
