@@ -82,6 +82,21 @@ sitrep <- function() {
 }
 
 
+##' Automatically set up the orderly namespace depending on the
+##' context in which this function is called.
+##'
+##' If called from within an orderly repository, it will activate the
+##' required version using [activate()] otherwise it will use the
+##' globally preferred version with [use()]
+##'
+##' @title Automatically configure orderly
+##' @return Nothing, called for side effects only
+##' @export
+auto <- function() {
+  tryCatch(activate(), error = function(e) use())
+}
+
+
 ## Persistant package state goes here
 current <- new.env(parent = emptyenv())
 
@@ -175,7 +190,7 @@ guess_orderly_version <- function(version) {
   if (!is.null(version)) {
     return(validate_orderly_version(version, "argument 'version'", FALSE))
   }
-  
+
   version <- getOption("orderly.version", NULL)
   if (!is.null(version)) {
     return(validate_orderly_version(version, "option 'orderly.version'"))

@@ -30,13 +30,18 @@ orderly.helper::use()
 
 which will set up orderly based on your personal preferences.
 
+If you don't want to think about any of this, you can call
+
+```r
+orderly.helper::auto()
+```
+
 We recommend adding to your `.Rprofile`:
 
 ```{r}
 options(orderly.version = 2, orderly.helper.verbose = TRUE)
 if (!require("orderly.helper", quietly = TRUE)) {
-  tryCatch(orderly.helper::activate(), 
-           error = function(e) orderly.helper::use())
+  orderly.helper::auto()
 }
 ```
 

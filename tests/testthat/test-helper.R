@@ -200,3 +200,18 @@ test_that("activate works with found version", {
   withr::with_dir(tmp, activate(FALSE))
   expect_equal(current$version, 1)
 })
+
+
+test_that("auto wrapper does the right thing", {
+  skip_if_not_installed("mockery")
+  mock_activate <- mockery::mock(NULL, stop("failure"))
+  mock_use <- mockery::mock()
+  mockery::stub(auto, "activate", mock_activate)
+  mockery::stub(auto, "use", mock_use)
+  auto()
+  mockery::expect_called(mock_activate, 1)
+  mockery::expect_called(mock_use, 0)
+  auto()
+  mockery::expect_called(mock_activate, 2)
+  mockery::expect_called(mock_use, 1)
+})
